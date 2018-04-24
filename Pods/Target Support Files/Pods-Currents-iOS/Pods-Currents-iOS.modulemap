@@ -1,0 +1,6 @@
+framework module Pods_Currents_iOS {
+  umbrella header "Pods-Currents-iOS-umbrella.h"
+
+  export *
+  module * { export * }
+}
