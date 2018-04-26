@@ -9,16 +9,23 @@
 import UIKit
 import SnapKit
 
-class MainControlsVC: UIViewController {
+class MainControlsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    let tableView = UITableView(frame: CGRect(), style: .grouped)
+    var timeSlots = [[TimeSlot]]()
+    
     //Constants
     let quickControlViewHeight:CGFloat = 120
     let quickControlSidePadding:CGFloat = 15
     let quickControlLabelFontSize:CGFloat = 22
-    let quickControlLabelDiscriptionFontSize:CGFloat = 14
+    let quickControlLabelDiscriptionFontSize:CGFloat = 13
+    let quickControlButtonFontSize:CGFloat = 15
     let buttonTopSpacing:CGFloat = 8
     let buttonHeight:CGFloat = 30
     let buttonSideSpacing:CGFloat = 8
-    
+    let headerHeight:CGFloat = 40
+    let quickControlNavbarOffset:CGFloat = -15
+
     
     //View Elements
     let quickControlView = UIView()
@@ -42,11 +49,19 @@ class MainControlsVC: UIViewController {
         navigationItem.title = "Home"
         let infoBarButton = UIBarButtonItem(image: #imageLiteral(resourceName: "info"), style: .plain, target: self, action: #selector(infoButtonPressed(_:)))
         navigationItem.leftBarButtonItem = infoBarButton
-        view.backgroundColor = UIColor.white
+        navigationItem.leftBarButtonItem?.tintColor = UIColor.white
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.barTintColor = UIColor(named: "LightBlue")
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        let navigationBar = navigationController!.navigationBar
+        navigationBar.setBackgroundImage(UIImage(),for: .default)
+        navigationBar.shadowImage = UIImage()
         
+        view.backgroundColor = UIColor.white
         view.addSubview(quickControlView)
         
         //QuickControls
+        quickControlView.backgroundColor = UIColor(named: "LightBlue")
         quickControlView.addSubview(quickControlsLabel)
         quickControlView.addSubview(quickControlsDiscriptionLabel)
         quickControlView.addSubview(quickControlsThirtyMinuteButton)
@@ -55,7 +70,7 @@ class MainControlsVC: UIViewController {
         quickControlView.addSubview(quickControlsTurnOffButton)
         
         quickControlView.snp.makeConstraints { (make) in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(quickControlNavbarOffset)
             make.left.equalTo(view)
             make.right.equalTo(view)
             make.height.equalTo(quickControlViewHeight)
@@ -63,7 +78,7 @@ class MainControlsVC: UIViewController {
         
         quickControlsLabel.font = UIFont.boldSystemFont(ofSize: quickControlLabelFontSize)
         quickControlsLabel.text = "Quick Controls"
-        quickControlsLabel.textColor = UIColor.black
+        quickControlsLabel.textColor = UIColor.white
         quickControlsLabel.snp.remakeConstraints { make in
             make.top.equalTo(quickControlView).offset(quickControlSidePadding)
             make.left.equalTo(quickControlView).offset(quickControlSidePadding)
@@ -71,7 +86,7 @@ class MainControlsVC: UIViewController {
         }
         
         quickControlsDiscriptionLabel.text = "Make speedy controls to your heating schedule"
-        quickControlsDiscriptionLabel.textColor = UIColor.black
+        quickControlsDiscriptionLabel.textColor = UIColor.white
         quickControlsDiscriptionLabel.numberOfLines = 0
         quickControlsDiscriptionLabel.font = UIFont.systemFont(ofSize: quickControlLabelDiscriptionFontSize)
         quickControlsDiscriptionLabel.snp.remakeConstraints { make in
@@ -98,11 +113,12 @@ class MainControlsVC: UIViewController {
             if let button = buttonView as? UIButton {
                 button.layer.cornerRadius = buttonHeight / 2
                 button.layer.borderWidth = 1
-                button.layer.borderColor = view.tintColor.cgColor
-                button.setTitleColor(UIColor.black, for: .normal)
+                button.layer.borderColor = UIColor.white.cgColor
+                button.setTitleColor(UIColor.white, for: .normal)
                 button.snp.makeConstraints{ (make) -> Void in
                     make.height.equalTo(buttonHeight)
                 }
+                button.titleLabel?.font = UIFont.systemFont(ofSize: quickControlButtonFontSize)
             }
         }
         controlsButtonStack.snp.makeConstraints { make in
@@ -111,6 +127,30 @@ class MainControlsVC: UIViewController {
             make.right.equalTo(quickControlView).offset(-quickControlSidePadding)
             make.bottom.equalTo(quickControlView.snp.bottom).offset(-quickControlSidePadding)
         }
+        
+        //Tableview
+        tableView.register(TimeSlotCell.self, forCellReuseIdentifier: TimeSlotCell.identifier)
+        tableView.register(TimeSlotTableHeader.self, forHeaderFooterViewReuseIdentifier: TimeSlotTableHeader.identifier)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.allowsSelection = false
+        
+        view.addSubview(tableView)
+        tableView.snp.makeConstraints{ make in
+            make.top.equalTo(quickControlView.snp.bottom)
+            make.bottom.equalTo(view)
+            make.right.equalTo(view)
+            make.left.equalTo(view)
+        }
+        
+        //for testing
+        timeSlots = [
+            [TimeSlot(from: "2018-04-26 9:00", to: "2018-04-26 12:00"), TimeSlot(from: "2018-04-26 15:00", to: "2018-04-26 18:00")],
+            [TimeSlot(from: "2018-04-27 9:00", to: "2018-04-27 12:00"), TimeSlot(from: "2018-04-27 15:00", to: "2018-04-27 18:00"), TimeSlot(from: "2018-04-27 19:00", to: "2018-04-27 21:00"), TimeSlot(from: "2018-04-27 23:00", to: "2018-04-27 23:30")],
+            [TimeSlot(from: "2018-04-28 9:00", to: "2018-04-28 12:00"), TimeSlot(from: "2018-04-28 15:00", to: "2018-04-28 18:00")],
+            [TimeSlot(from: "2018-04-29 9:00", to: "2018-04-29 12:00"), TimeSlot(from: "2018-04-29 15:00", to: "2018-04-29 18:00"), TimeSlot(from: "2018-04-29 19:00", to: "2018-04-29 21:00"), TimeSlot(from: "2018-04-29 23:00", to: "2018-04-29 23:30")]
+        ]
         
         
         
@@ -123,5 +163,28 @@ class MainControlsVC: UIViewController {
         present(InfoVC(), animated: true, completion: nil)
     }
 
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return timeSlots.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return timeSlots[section].count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: TimeSlotCell.identifier, for: indexPath) as! TimeSlotCell
+        cell.configure(with: timeSlots[indexPath.section][indexPath.row])
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: TimeSlotTableHeader.identifier) as! TimeSlotTableHeader
+        header.setTitle(timeSlots[section][0].getMonthDay())
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return headerHeight
+    }
 
 }

@@ -11,6 +11,9 @@
 		AA2B38312087D5B700426707 /* LoginUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2B38302087D5B700426707 /* LoginUtils.swift */; };
 		AA2B38362087E5EA00426707 /* MainControlsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2B38352087E5EA00426707 /* MainControlsVC.swift */; };
 		AA2B38382087EADD00426707 /* InfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2B38372087EADD00426707 /* InfoVC.swift */; };
+		AAAA17BC2091B95100CC2ACA /* TimeSlotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAAA17BB2091B95100CC2ACA /* TimeSlotCell.swift */; };
+		AAAA17C02091B9F800CC2ACA /* TimeSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAAA17BF2091B9F800CC2ACA /* TimeSlot.swift */; };
+		AAAA17C52091D4DE00CC2ACA /* TimeSlotTableHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAAA17C42091D4DE00CC2ACA /* TimeSlotTableHeader.swift */; };
 		AAE086A2206AF88A0065BFF5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE086A1206AF88A0065BFF5 /* AppDelegate.swift */; };
 		AAE086A9206AF88A0065BFF5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AAE086A8206AF88A0065BFF5 /* Assets.xcassets */; };
 		AAE086AC206AF88A0065BFF5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAE086AA206AF88A0065BFF5 /* LaunchScreen.storyboard */; };
@@ -22,6 +25,9 @@
 		AA2B38302087D5B700426707 /* LoginUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUtils.swift; sourceTree = "<group>"; };
 		AA2B38352087E5EA00426707 /* MainControlsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainControlsVC.swift; sourceTree = "<group>"; };
 		AA2B38372087EADD00426707 /* InfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoVC.swift; sourceTree = "<group>"; };
+		AAAA17BB2091B95100CC2ACA /* TimeSlotCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSlotCell.swift; sourceTree = "<group>"; };
+		AAAA17BF2091B9F800CC2ACA /* TimeSlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSlot.swift; sourceTree = "<group>"; };
+		AAAA17C42091D4DE00CC2ACA /* TimeSlotTableHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSlotTableHeader.swift; sourceTree = "<group>"; };
 		AAE0869E206AF88A0065BFF5 /* Currents-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Currents-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAE086A1206AF88A0065BFF5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AAE086A8206AF88A0065BFF5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -63,19 +69,29 @@
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
-		AA2B38332087E59500426707 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		AA2B38342087E59B00426707 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				AA2B38302087D5B700426707 /* LoginUtils.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		AAAA17BE2091B9DB00CC2ACA /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AAAA17BF2091B9F800CC2ACA /* TimeSlot.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AAAA17C12091BA0600CC2ACA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AAAA17BB2091B95100CC2ACA /* TimeSlotCell.swift */,
+				AAAA17C42091D4DE00CC2ACA /* TimeSlotTableHeader.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		AAE08695206AF88A0065BFF5 = {
@@ -100,8 +116,9 @@
 			isa = PBXGroup;
 			children = (
 				AAE086A1206AF88A0065BFF5 /* AppDelegate.swift */,
+				AAAA17BE2091B9DB00CC2ACA /* Models */,
+				AAAA17C12091BA0600CC2ACA /* Views */,
 				AA2B38342087E59B00426707 /* Helpers */,
-				AA2B38332087E59500426707 /* Views */,
 				AA2B38322087E58C00426707 /* ViewControllers */,
 				AAE086A8206AF88A0065BFF5 /* Assets.xcassets */,
 				AAE086AA206AF88A0065BFF5 /* LaunchScreen.storyboard */,
@@ -247,9 +264,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAE086A2206AF88A0065BFF5 /* AppDelegate.swift in Sources */,
+				AAAA17C02091B9F800CC2ACA /* TimeSlot.swift in Sources */,
 				AA2B38362087E5EA00426707 /* MainControlsVC.swift in Sources */,
+				AAAA17BC2091B95100CC2ACA /* TimeSlotCell.swift in Sources */,
 				AAE086B4206AF8ED0065BFF5 /* LoginVC.swift in Sources */,
 				AA2B38312087D5B700426707 /* LoginUtils.swift in Sources */,
+				AAAA17C52091D4DE00CC2ACA /* TimeSlotTableHeader.swift in Sources */,
 				AA2B38382087EADD00426707 /* InfoVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -385,6 +405,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = NHAKALPCJ4;
 				INFOPLIST_FILE = "Currents-iOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.cusd.Currents-iOS";
@@ -400,6 +421,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = NHAKALPCJ4;
 				INFOPLIST_FILE = "Currents-iOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.cusd.Currents-iOS";
