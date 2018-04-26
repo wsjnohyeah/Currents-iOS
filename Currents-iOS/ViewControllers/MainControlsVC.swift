@@ -9,10 +9,19 @@
 import UIKit
 import SnapKit
 
+enum TimeSlotButtonType {
+    case from
+    case to
+    case none
+}
+
 class MainControlsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let tableView = UITableView(frame: CGRect(), style: .grouped)
     var timeSlots = [[TimeSlot]]()
+    
+    var currentDatePickerIndexPath:IndexPath?
+    var currentDatePickerTimeSlotButtonType:TimeSlotButtonType = .none
     
     //Constants
     let quickControlViewHeight:CGFloat = 120
@@ -25,6 +34,7 @@ class MainControlsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     let buttonSideSpacing:CGFloat = 8
     let headerHeight:CGFloat = 40
     let quickControlNavbarOffset:CGFloat = -15
+    let datePickerHeight:CGFloat = 300
 
     
     //View Elements
@@ -35,6 +45,8 @@ class MainControlsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     let quickControlsOneHourButton = UIButton()
     let quickControlsTwoHourButton = UIButton()
     let quickControlsTurnOffButton = UIButton()
+    let datePicker = UIDatePicker()
+    let toolBar = UIToolbar()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -156,11 +168,96 @@ class MainControlsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
+    @objc func fromButtonPressed(_ sender:UIButton){
+        if let cell = sender.superview?.superview?.superview as? TimeSlotCell { //button is in left stack, left stack in cell stack, cell stack in cell.
+            if let indexPath = tableView.indexPath(for: cell) {
+                currentDatePickerIndexPath = indexPath
+                currentDatePickerTimeSlotButtonType = .from
+                loadDatePicker(with: timeSlots[indexPath.section][indexPath.row].from)
+            }
+        }
+    }
+    
+    @objc func toButtonPressed(_ sender:UIButton){
+        if let cell = sender.superview?.superview?.superview as? TimeSlotCell { //button is in left stack, left stack in cell stack, cell stack in cell.
+            if let indexPath = tableView.indexPath(for: cell) {
+                currentDatePickerIndexPath = indexPath
+                currentDatePickerTimeSlotButtonType = .to
+                loadDatePicker(with: timeSlots[indexPath.section][indexPath.row].to)
+            }
+        }
+    }
+    
     /**
      * Handles the press of the info button. Should segue to the infoVC.
      */
     @objc func infoButtonPressed(_ sender:UIButton) {
         present(InfoVC(), animated: true, completion: nil)
+    }
+    
+    func loadDatePicker(with currentTime:Date){
+        view.addSubview(datePicker)
+        view.addSubview(toolBar)
+        
+        //date picker
+        datePicker.setDate(currentTime, animated: false)
+        datePicker.isHidden = false
+        datePicker.backgroundColor = UIColor.white
+        datePicker.datePickerMode = .time
+        datePicker.center = view.center
+        
+        //tool bar
+        toolBar.barStyle = .default
+        toolBar.isTranslucent = true
+        toolBar.tintColor = view.tintColor
+        toolBar.sizeToFit()
+        
+        //add button to tool bar
+        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(toolBarDoneClicked))
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(toolBarCancelClicked))
+        toolBar.setItems([cancelButton, spaceButton, doneButton], animated: true)
+        toolBar.isUserInteractionEnabled = true
+        
+        toolBar.isHidden = false
+        
+        datePicker.snp.makeConstraints{ make in
+            make.bottom.equalTo(view)
+            make.right.equalTo(view)
+            make.left.equalTo(view)
+            make.height.equalTo(datePickerHeight)
+        }
+        toolBar.snp.makeConstraints{ make in
+            make.bottom.equalTo(datePicker.snp.top)
+            make.right.equalTo(view)
+            make.left.equalTo(view)
+        }
+    }
+    
+    
+    @objc func toolBarDoneClicked() {
+        let date = datePicker.date
+        if currentDatePickerIndexPath != nil {
+            if currentDatePickerTimeSlotButtonType == .from {
+                timeSlots[currentDatePickerIndexPath!.section][currentDatePickerIndexPath!.row].from = date
+            }
+            if currentDatePickerTimeSlotButtonType == .to {
+                timeSlots[currentDatePickerIndexPath!.section][currentDatePickerIndexPath!.row].to = date
+            }
+            tableView.reloadRows(at: [currentDatePickerIndexPath!], with: .automatic)
+            currentDatePickerIndexPath = nil
+            currentDatePickerTimeSlotButtonType = .none
+
+        }
+        
+        datePicker.resignFirstResponder()
+        datePicker.isHidden = true
+        toolBar.isHidden = true
+    }
+    
+    @objc func toolBarCancelClicked() {
+        datePicker.isHidden = true
+        toolBar.isHidden = true
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -174,6 +271,8 @@ class MainControlsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TimeSlotCell.identifier, for: indexPath) as! TimeSlotCell
         cell.configure(with: timeSlots[indexPath.section][indexPath.row])
+        cell.fromButton.addTarget(self, action: #selector(fromButtonPressed(_:)), for: .touchUpInside)
+        cell.toButton.addTarget(self, action: #selector(toButtonPressed(_:)), for: .touchUpInside)
         return cell
     }
     
@@ -186,5 +285,7 @@ class MainControlsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return headerHeight
     }
+    
+    
 
 }
