@@ -20,6 +20,7 @@ class TimeSlotTableHeader: UITableViewHeaderFooterView {
     
     var title = UILabel()
     let editButton = UIButton()
+    var section:Int?
     
     required init?(coder aDecoder: NSCoder) {super.init(coder: aDecoder)}
     
@@ -30,7 +31,7 @@ class TimeSlotTableHeader: UITableViewHeaderFooterView {
     
     func setLayouts(){
         editButton.setTitleColor(self.tintColor, for: .normal)
-        editButton.setTitle("Edit", for: .normal)
+        editButton.setTitle("Add", for: .normal)
         editButton.titleLabel?.font = UIFont.systemFont(ofSize: buttonFontSize)
         
         title.font = UIFont.boldSystemFont(ofSize: titleFontSize)
